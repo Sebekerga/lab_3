@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="lab_3" default="build">
-    <property name="base.dir"   location="./" />
-    <property name="build.dir"  location="${base.dir}/build" />
-    <property name="compile.dir" location="${build.dir}/classes" />
-    <property name="source.dir" location="${base.dir}/src" />
-    <property name="junit.dir" location ="${base.dir}/lib" />  
-
+    <property file="default.properties" />
 	
     <path id="classpath.base" >
         <pathelement location="${junit.dir}/junit-4.11.jar" />
@@ -14,8 +9,6 @@
         <pathelement location="${compile.dir}" />
         <pathelement location="${source.dir}" />
     </path>
-
-    <property name="test.results.dir" location="${build.dir}/test_results" />
     <path id="classpath.test">
         <pathelement location="${test.results.dir}" />        
         <path refid="classpath.base" />
@@ -32,7 +25,6 @@
     </target>
 
     <!-- BUILD -->
-    <property name="exec.name" value="task_12354"/>
     <target name="build" depends="compile">
      	<jar destfile="${build.dir}/${exec.name}.jar" basedir="${compile.dir}">
 			<manifest>
@@ -75,8 +67,13 @@
         </junit>
     </target>
 
+    <!-- NATIVE2ASCII -->
+    <target name="native2ascii">
+
+    </target>
+
     <!-- ENV -->
-    <property file="local.properties" />
+    <property file="some.properties" />
     <target name="env" depends="clean">        
 		<mkdir dir="${compile.dir}"/>
         <javac srcdir="${source.dir}"
@@ -87,7 +84,7 @@
             executable="${javac.dir}">
             <classpath refid="classpath.test" />  
 		</javac>
-     	<jar destfile="${build.dir}/${exec.name}_env.jar" basedir="${compile.dir}">
+     	<jar destfile="${build.dir}/${exec.name}.jar" basedir="${compile.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="main.Main"/>
                 <attribute name="Class-Path" value="${compile.dir}/*"/>
