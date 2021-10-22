@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="lab_3" default="build">
+    <property name="base.dir"   location="./" />
+    <property name="build.dir"  location="${base.dir}/build" />
+    <property name="compile.dir" location="${build.dir}/classes" />
+    <property name="source.dir" location="${base.dir}/src" />
+    <property name="junit.dir" location ="${base.dir}/lib" />  
+
+	
+    <path id="classpath.base" >
+        <pathelement location="${junit.dir}/junit-4.11.jar" />
+        <pathelement location="${junit.dir}/ant-junit-1.9.4.jar" />
+        <pathelement location="${junit.dir}/hamcrest-core-1.3.jar"/>
+        <pathelement location="${compile.dir}" />
+        <pathelement location="${source.dir}" />
+    </path>
+
+    <property name="test.results.dir" location="${build.dir}/test_results" />
+    <path id="classpath.test">
+        <pathelement location="${test.results.dir}" />        
+        <path refid="classpath.base" />
+    </path>
+
+    <!-- COMPILE -->
+    <target name="compile" depends="clean">
+        <mkdir dir="${compile.dir}" />
+        <javac srcdir="${source.dir}"
+            destdir="${compile.dir}"
+            includeAntRuntime="false">
+            <classpath refid="classpath.base" />    
+        </javac>
+    </target>
+
+    <!-- BUILD -->
+    <property name="exec.name" value="task_12354"/>
+    <target name="build" depends="compile">
+     	<jar destfile="${build.dir}/${exec.name}.jar" basedir="${compile.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="main.Main"/>
+                <attribute name="Class-Path" value="${compile.dir}/*"/>
+			</manifest>
+		</jar>	
+    </target>
+
+    <!-- CLEAN -->
+    <target name="clean">
+        <delete dir="${build.dir}" includes="**/*" includeemptydirs="true" />
+        <delete dir="${base.dir}" includes="**/*test*result*" />
+        <delete dir="${base.dir}" includes="**/*test*summary*" />
+    </target>
+
+    <!-- TEST -->
+    <target name="test" depends="build">
+        <mkdir dir="${test.results.dir}" />
+        <junit showoutput="yes"  
+            haltonfailure="no" 
+            printsummary="yes">
+            <classpath refid="classpath.test" /> 
+            
+            <test name="test.EdgeTest" 
+                outfile="edge_test_summary" 
+                todir="${test.results.dir}">
+                <formatter type="plain"/>
+            </test>
+            <test name="test.FigureTest" 
+                outfile="figure_test_summary" 
+                todir="${test.results.dir}" >
+                <formatter type="plain"/>
+            </test>
+            <test name="test.CombinedFigureTest" 
+                outfile="combined_figure_test_summary" 
+                todir="${test.results.dir}" >
+                <formatter type="plain"/>
+            </test>
+        </junit>
+    </target>
+
+    <!-- ENV -->
+    <property file="local.properties" />
+    <target name="env" depends="clean">        
+		<mkdir dir="${compile.dir}"/>
+        <javac srcdir="${source.dir}"
+            destdir="${compile.dir}"
+            includeAntRuntime="false"
+            source="1.8"
+            target="1.8"
+            executable="${javac.dir}">
+            <classpath refid="classpath.test" />  
+		</javac>
+     	<jar destfile="${build.dir}/${exec.name}_env.jar" basedir="${compile.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="main.Main"/>
+                <attribute name="Class-Path" value="${compile.dir}/*"/>
+			</manifest>
+		</jar>	
+    </target>
+
+</project>
