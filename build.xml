@@ -39,6 +39,7 @@
         <delete dir="${build.dir}" includes="**/*" includeemptydirs="true" />
         <delete dir="${base.dir}" includes="**/*test*result*" />
         <delete dir="${base.dir}" includes="**/*test*summary*" />
+        <echo message="Removing temporary files" />
     </target>
 
     <!-- TEST -->
@@ -69,27 +70,24 @@
 
     <!-- NATIVE2ASCII -->
     <target name="native2ascii">
-
+        <native2ascii src="${locale.dir}/native" dest="${locale.dir}" ext=".properties"/>
     </target>
 
     <!-- ENV -->
-    <property file="some.properties" />
-    <target name="env" depends="clean">        
-		<mkdir dir="${compile.dir}"/>
+    <target name="env" depends="clean">     
+        <property file="some.properties" />   
+		<mkdir dir="${compile.dir}"/> 
         <javac srcdir="${source.dir}"
             destdir="${compile.dir}"
             includeAntRuntime="false"
-            source="1.8"
-            target="1.8"
             executable="${javac.dir}">
-            <classpath refid="classpath.test" />  
+            <classpath refid="classpath.base" /> 
 		</javac>
-     	<jar destfile="${build.dir}/${exec.name}.jar" basedir="${compile.dir}">
-			<manifest>
-				<attribute name="Main-Class" value="main.Main"/>
-                <attribute name="Class-Path" value="${compile.dir}/*"/>
-			</manifest>
-		</jar>	
+
+        <echo message="Running program" />
+        <java classname="main.Main" jvm="${java.dir}">
+            <classpath refid="classpath.base" /> 
+        </java>
     </target>
 
 </project>

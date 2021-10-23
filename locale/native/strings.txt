@@ -1,0 +1,3 @@
+input_format    = Input_format: task_N {Radius} {x} {y}
+point_inside    = 🟢 Point is located on the figure
+point_outside   = 🔴 Point is located outside the figure
